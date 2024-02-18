@@ -1,0 +1,83 @@
+[
+  {
+    "id": "1",
+    "origem": {
+      "latitude": -23.5505,
+      "longitude": -46.6333,
+      "endereco": "Av. Paulista, 1000"
+    },
+    "destino": {
+      "latitude": -23.5667,
+      "longitude": -46.6667,
+      "endereco": "Rua Augusta, 200"
+    },
+    "data_hora_inicio": "2024-02-15T10:00:00",
+    "data_hora_fim": "2024-02-15T10:30:00",
+    "valor": 25.5,
+    "motorista": {
+      "id": "789012345",
+      "nome": "Jo\u00e3o da Silva",
+      "carro": "Toyota Corolla",
+      "placa": "ABC1234"
+    },
+    "passageiro": {
+      "id": "987654321",
+      "nome": "Maria Oliveira",
+      "forma_pagamento": "cartao_credito"
+    }
+  },
+  {
+    "id": "2",
+    "origem": {
+      "latitude": -23.5603,
+      "longitude": -46.6619,
+      "endereco": "Rua Oscar Freire, 500"
+    },
+    "destino": {
+      "latitude": -23.5675,
+      "longitude": -46.6515,
+      "endereco": "Av. Rebou\u00e7as, 700"
+    },
+    "data_hora_inicio": "2024-02-16T14:00:00",
+    "data_hora_fim": "2024-02-16T14:30:00",
+    "valor": 30.75,
+    "motorista": {
+      "id": "789012346",
+      "nome": "Ana Souza",
+      "carro": "Chevrolet Onix",
+      "placa": "XYZ5678"
+    },
+    "passageiro": {
+      "id": "987654322",
+      "nome": "Carlos Santos",
+      "forma_pagamento": "dinheiro"
+    }
+  },
+  {
+    "id": "3",
+    "origem": {
+      "latitude": -23.5628,
+      "longitude": -46.6541,
+      "endereco": "Rua Bela Cintra, 800"
+    },
+    "destino": {
+      "latitude": -23.5689,
+      "longitude": -46.6752,
+      "endereco": "Pra\u00e7a da Rep\u00fablica"
+    },
+    "data_hora_inicio": "2024-02-17T08:30:00",
+    "data_hora_fim": "2024-02-17T09:00:00",
+    "valor": 20.0,
+    "motorista": {
+      "id": "789012347",
+      "nome": "Pedro Santos",
+      "carro": "Volkswagen Gol",
+      "placa": "DEF9012"
+    },
+    "passageiro": {
+      "id": "987654323",
+      "nome": "Juliana Oliveira",
+      "forma_pagamento": "cartao_debito"
+    }
+  }
+]

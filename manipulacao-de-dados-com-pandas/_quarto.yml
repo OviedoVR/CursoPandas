@@ -1,0 +1,35 @@
+project:
+  type: website
+
+website:
+
+  title: "Pandas"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Início
+      - text: Aulas
+        menu:       
+        - href: sections/leitura_arquivos.qmd
+          text: 1. Leitura de arquivos
+        - href: sections/metodos_basicos_pandas.qmd
+          text: 2. Métodos básicos                  
+        - href: sections/slicing_e_filtros.qmd
+          text: 3. Slicing e filtros
+        - href: sections/estatistica_com_pandas.qmd
+          text: 4. Métodos estatísticos                    
+        - href: sections/agregacoes.qmd
+          text: 5. Agregações
+
+format:
+  html:
+    theme: zephyr
+    css: styles.css
+    toc: true
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3

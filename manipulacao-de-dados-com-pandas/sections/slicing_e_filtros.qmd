@@ -1,0 +1,198 @@
+---
+title: "Manipulação de Dados com Pandas"
+author: "Vinícius Oviedo"
+toc: true
+toc-expand: 1
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3
+---
+
+# Slicing e filtros
+
+Nesta aula, vamos trabalhar com um conjunto de dados sobre o **preço dos serviços de streaming**. Veremos alguns métodos `pandas` para:
+
+1. Selecionar colunas
+2. Eliminar colunas
+3. Realizar slicing (linhas, colunas)
+4. Realizar slicing lógico (condições)
+5. Realizar consultas SQL
+6. Aplicar outros filtros de colunas
+
+Antes, precisamos importar a biblioteca e carregar os dados.
+
+```{python}
+import pandas as pd
+
+preco_streamings = pd.read_excel('dados/preco_servicos_streaming/Streaming_prices.xlsx')
+preco_streamings.head(2)
+``` 
+
+## 1. Selecionar colunas
+
+Uma maneira simples de selecionar colunas é especificar quais colunas se quer filtrar utilizando colchetes duplos (`[['coluna A', 'coluna B', 'coluna N']]`).
+
+```{python}
+preco_streamings[['Streaming service', 'Price (USD)']]
+```
+
+Inclusive, é possível salvar essa seleção em outro dataframe (ou variável):
+`
+```{python}
+streaming_e_preco = preco_streamings[['Streaming service', 'Price (USD)']]
+streaming_e_preco.tail(3)
+```
+
+## 2. Eliminar colunas
+
+Vamos supor que eu queria trabalhar apenas com a lista de streamings disponíveis no dataset. Uma maneira de fazer isso é:
+
+1. Listar as duplicatas de `Streaming service`
+2. Eliminar as demais colunas.
+
+Para isso, podemos usar os métodos `.drop_duplicates()` e o método `.drop()` - este último tem como opções indicar o eixo (**0:** linhas, **1:** colunas) e o paramêtro `inplace=True`, que permite sobreescrever o *dataframe*.
+
+```{python}
+# Listando os serviços de streaming (sem duplicatas) e as demais colunas:
+streamings = preco_streamings.drop_duplicates(subset='Streaming service')
+
+# Elimiando as colunas de data e preço:
+streamings.drop(['Reference date', 'Price (USD)'], axis=1, inplace=True)
+streamings
+``` 
+
+## 3. Slicing com `loc` e `iloc`
+
+Os métodos mencionados no título da seção são muito eficazes e permitem selecionar linhas e também a combinação de linhas e colunas. 
+
+```python
+# loc (selecionar linhas)
+df.loc[i]
+
+# iloc (selecionar linhas e colunas)
+df.iloc[i,j]
+```
+
+Para melhor entendimento, vejamos alguns exemploa:
+
+> **Linha 20 (lembre que os índices começam em 0)**
+```{python}
+preco_streamings.loc[19]
+```
+
+> **Índices 400-405**
+```{python}
+# linha 20 (lembre que os índices começam em 0)
+preco_streamings.loc[400:405]
+```
+
+> **Linhas e colunas**
+```{python}
+# indices 10:14 (10, n-1) e coluna 3 (preço):
+preco_streamings.iloc[10:16, 2]
+```
+
+
+## 4. Slicing lógico (condições)
+
+Podemos aplicar condições durante o *slicing* em um *dataframe*.
+
+```{python}
+# condição:
+condicao = preco_streamings['Streaming service'] == 'Prime Video'
+
+# slicing (apenas Prime Video):
+preco_streamings[condicao]
+```
+
+Certamente, isso pode ser realizado em uma única linha de código também:
+
+```{python}
+# slicing (todos os streamings menos Prime Video):
+preco_streamings[preco_streamings['Streaming service'] != 'Prime Video']
+```
+
+Outro exemplo seria:
+
+```{python}
+# condição:
+condicao_A = preco_streamings['Streaming service'] == 'Prime Video' 
+condicao_B = preco_streamings['Streaming service'] == 'Disney+'
+
+# slicing (streamings: Prime Video ou Disney+ ):
+preco_streamings[condicao_A | condicao_B]
+```
+
+
+## 5. Consultas SQL com o `query()`
+
+Podemos utilizar de expressões muito similares a linguagem SQL.
+
+```python
+#query
+df.query(<expressão>)
+```
+
+Vejamos alguns exemplos que ilustram as possibilidades desse método.
+
+```{python}
+preco_streamings.query(' `Price (USD)` >= 7.99 & `Price (USD)` < 11.99')
+```
+
+```{python}
+preco_streamings.query(' `Reference date` == "Jan-2024" ')
+```
+
+```{python}
+# Listando interesses:
+streamings_de_interesse = ['Paramount+', 'Netflix']
+
+# Realizando a consulta:
+consulta = preco_streamings.query(' `Streaming service` in @streamings_de_interesse ')
+consulta
+```
+
+## 6. Outros filtros de coluna
+
+Vejamos outros tipos de filtros de coluna utilizando o cojunto de dados de **vendas**:
+
+> **Filter**
+
+O método `.filter()` é muito útil em algumas situações. 
+
+```{python}
+vendas_europa = pd.read_csv('dados/vendas/EuropeSalesRecords.csv')
+vendas_europa
+```
+
+> **Like**
+
+```{python}
+vendas_europa.filter(like='Order', axis=1)
+```
+
+> **Por tipo de dado**
+
+```{python}
+# selecionar colunas numéricas:
+colunas_numericas = vendas_europa.select_dtypes(include=['number'])
+colunas_numericas
+```
+
+```{python}
+# selecionar colunas categóricas:
+colunas_categoricas = vendas_europa.select_dtypes(include=['object'])
+colunas_categoricas
+```
+
+É possível, ainda, filtrar pelo tipo de dado em específico:
+
+```{python}
+print( vendas_europa.select_dtypes('object').columns.tolist() )
+print( vendas_europa.select_dtypes('float64').columns.tolist() )
+```

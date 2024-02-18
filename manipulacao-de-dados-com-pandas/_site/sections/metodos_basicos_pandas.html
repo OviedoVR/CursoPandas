@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Vinícius Oviedo">
+
+<title>Pandas - Manipulação de Dados com Pandas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pandas</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Início</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-aulas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Aulas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-aulas">    
+        <li>
+    <a class="dropdown-item" href="../sections/leitura_arquivos.html">
+ <span class="dropdown-text">1. Leitura de arquivos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sections/metodos_basicos_pandas.html">
+ <span class="dropdown-text">2. Métodos básicos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sections/slicing_e_filtros.html">
+ <span class="dropdown-text">3. Slicing e filtros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sections/estatistica_com_pandas.html">
+ <span class="dropdown-text">4. Métodos estatísticos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sections/agregacoes.html">
+ <span class="dropdown-text">5. Agregações</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#métodos" id="toc-métodos" class="nav-link active" data-scroll-target="#métodos">Métodos</a>
+  <ul class="collapse">
+  <li><a href="#primeirasúltimas-n-linhas" id="toc-primeirasúltimas-n-linhas" class="nav-link" data-scroll-target="#primeirasúltimas-n-linhas">1. Primeiras/últimas <em>N</em> linhas</a></li>
+  <li><a href="#tamanho-do-dataframe" id="toc-tamanho-do-dataframe" class="nav-link" data-scroll-target="#tamanho-do-dataframe">2. Tamanho do dataframe</a></li>
+  <li><a href="#tipo-de-dados-e-informações-gerais" id="toc-tipo-de-dados-e-informações-gerais" class="nav-link" data-scroll-target="#tipo-de-dados-e-informações-gerais">3. Tipo de dados e informações gerais</a></li>
+  <li><a href="#dados-nulos" id="toc-dados-nulos" class="nav-link" data-scroll-target="#dados-nulos">4. Dados nulos</a></li>
+  <li><a href="#valores-disintos" id="toc-valores-disintos" class="nav-link" data-scroll-target="#valores-disintos">5. Valores disintos</a></li>
+  <li><a href="#contagem-de-valores" id="toc-contagem-de-valores" class="nav-link" data-scroll-target="#contagem-de-valores">6. Contagem de valores</a>
+  <ul class="collapse">
+  <li><a href="#dica" id="toc-dica" class="nav-link" data-scroll-target="#dica">Dica</a></li>
+  </ul></li>
+  <li><a href="#duplicatas" id="toc-duplicatas" class="nav-link" data-scroll-target="#duplicatas">7. Duplicatas</a></li>
+  <li><a href="#novas-colunas" id="toc-novas-colunas" class="nav-link" data-scroll-target="#novas-colunas">8. Novas colunas</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Manipulação de Dados com Pandas</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Vinícius Oviedo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="métodos" class="level1">
+<h1>Métodos</h1>
+<p>Nesta aula, vamos trabalhar com um conjunto de dados sobre <strong>vendas</strong>. Veremos métodos para:</p>
+<ol type="1">
+<li>Mostrar as <em>N</em> primeiras ou <em>N</em> últimas linhas</li>
+<li>Verificar o tamanho do <em>dataframe</em></li>
+<li>Verificar os tipos de dados (variáveis) e informaçoes gerais</li>
+<li>Inspecionar a presença de dados nulos/ausentes</li>
+<li>Investigar valores disintos</li>
+<li>Realizar contagem de valores</li>
+<li>Listar duplicatas</li>
+<li>Criar novas colunas.</li>
+</ol>
+<p>Entretanto, vamos carregar os dados a partir do bloco de código abaixo:</p>
+<div id="2a54cf75" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>vendas_europa <span class="op">=</span> pd.read_csv(<span class="st">'dados/vendas/EuropeSalesRecords.csv'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>vendas_europa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Europe</td>
+<td>Czech Republic</td>
+<td>Beverages</td>
+<td>Offline</td>
+<td>C</td>
+<td>9/12/2011</td>
+<td>478051030</td>
+<td>9/29/2011</td>
+<td>4778</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>226716.10</td>
+<td>151892.62</td>
+<td>74823.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Europe</td>
+<td>Bosnia and Herzegovina</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>M</td>
+<td>10/14/2013</td>
+<td>919133651</td>
+<td>11/4/2013</td>
+<td>927</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>101302.56</td>
+<td>33223.68</td>
+<td>68078.88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Europe</td>
+<td>Austria</td>
+<td>Cereal</td>
+<td>Offline</td>
+<td>C</td>
+<td>8/13/2014</td>
+<td>987410676</td>
+<td>9/6/2014</td>
+<td>5616</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>1155211.20</td>
+<td>657689.76</td>
+<td>497521.44</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Europe</td>
+<td>Bulgaria</td>
+<td>Office Supplies</td>
+<td>Online</td>
+<td>L</td>
+<td>10/31/2010</td>
+<td>672330081</td>
+<td>11/29/2010</td>
+<td>6266</td>
+<td>651.21</td>
+<td>524.96</td>
+<td>4080481.86</td>
+<td>3289399.36</td>
+<td>791082.50</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Europe</td>
+<td>Estonia</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>L</td>
+<td>9/28/2016</td>
+<td>579463422</td>
+<td>11/1/2016</td>
+<td>4958</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>46258.14</td>
+<td>34309.36</td>
+<td>11948.78</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1325</td>
+<td>Europe</td>
+<td>Norway</td>
+<td>Personal Care</td>
+<td>Offline</td>
+<td>M</td>
+<td>1/14/2014</td>
+<td>634033286</td>
+<td>1/15/2014</td>
+<td>3394</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>277391.62</td>
+<td>192337.98</td>
+<td>85053.64</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1326</td>
+<td>Europe</td>
+<td>Ukraine</td>
+<td>Cereal</td>
+<td>Offline</td>
+<td>L</td>
+<td>4/14/2014</td>
+<td>559183347</td>
+<td>5/21/2014</td>
+<td>3633</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>747308.10</td>
+<td>425460.63</td>
+<td>321847.47</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1327</td>
+<td>Europe</td>
+<td>Armenia</td>
+<td>Meat</td>
+<td>Offline</td>
+<td>M</td>
+<td>11/9/2015</td>
+<td>781416594</td>
+<td>12/23/2015</td>
+<td>7390</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>3117767.10</td>
+<td>2695059.10</td>
+<td>422708.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1328</td>
+<td>Europe</td>
+<td>Denmark</td>
+<td>Clothes</td>
+<td>Offline</td>
+<td>H</td>
+<td>5/9/2012</td>
+<td>713357150</td>
+<td>6/3/2012</td>
+<td>7088</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>774576.64</td>
+<td>254033.92</td>
+<td>520542.72</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1329</td>
+<td>Europe</td>
+<td>Finland</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>L</td>
+<td>4/22/2014</td>
+<td>906794202</td>
+<td>5/11/2014</td>
+<td>9410</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>1028324.80</td>
+<td>337254.40</td>
+<td>691070.40</td>
+</tr>
+</tbody>
+</table>
+
+<p>1330 rows × 14 columns</p>
+</div>
+</div>
+</div>
+<p>Dito isso, nada melhor que o velho “<strong><em>hands-on</em></strong>”.</p>
+<section id="primeirasúltimas-n-linhas" class="level2">
+<h2 class="anchored" data-anchor-id="primeirasúltimas-n-linhas">1. Primeiras/últimas <em>N</em> linhas</h2>
+<div id="0f966c7e" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dafault: N=5</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>vendas_europa.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Europe</td>
+<td>Czech Republic</td>
+<td>Beverages</td>
+<td>Offline</td>
+<td>C</td>
+<td>9/12/2011</td>
+<td>478051030</td>
+<td>9/29/2011</td>
+<td>4778</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>226716.10</td>
+<td>151892.62</td>
+<td>74823.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Europe</td>
+<td>Bosnia and Herzegovina</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>M</td>
+<td>10/14/2013</td>
+<td>919133651</td>
+<td>11/4/2013</td>
+<td>927</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>101302.56</td>
+<td>33223.68</td>
+<td>68078.88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Europe</td>
+<td>Austria</td>
+<td>Cereal</td>
+<td>Offline</td>
+<td>C</td>
+<td>8/13/2014</td>
+<td>987410676</td>
+<td>9/6/2014</td>
+<td>5616</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>1155211.20</td>
+<td>657689.76</td>
+<td>497521.44</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Europe</td>
+<td>Bulgaria</td>
+<td>Office Supplies</td>
+<td>Online</td>
+<td>L</td>
+<td>10/31/2010</td>
+<td>672330081</td>
+<td>11/29/2010</td>
+<td>6266</td>
+<td>651.21</td>
+<td>524.96</td>
+<td>4080481.86</td>
+<td>3289399.36</td>
+<td>791082.50</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Europe</td>
+<td>Estonia</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>L</td>
+<td>9/28/2016</td>
+<td>579463422</td>
+<td>11/1/2016</td>
+<td>4958</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>46258.14</td>
+<td>34309.36</td>
+<td>11948.78</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="d66b759f" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># É possível selecionar o numero de linhas a mostrar:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>vendas_europa.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Europe</td>
+<td>Czech Republic</td>
+<td>Beverages</td>
+<td>Offline</td>
+<td>C</td>
+<td>9/12/2011</td>
+<td>478051030</td>
+<td>9/29/2011</td>
+<td>4778</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>226716.10</td>
+<td>151892.62</td>
+<td>74823.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Europe</td>
+<td>Bosnia and Herzegovina</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>M</td>
+<td>10/14/2013</td>
+<td>919133651</td>
+<td>11/4/2013</td>
+<td>927</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>101302.56</td>
+<td>33223.68</td>
+<td>68078.88</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Últimas cinco linhas:</strong></p>
+</blockquote>
+<div id="801ac117" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1325</td>
+<td>Europe</td>
+<td>Norway</td>
+<td>Personal Care</td>
+<td>Offline</td>
+<td>M</td>
+<td>1/14/2014</td>
+<td>634033286</td>
+<td>1/15/2014</td>
+<td>3394</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>277391.62</td>
+<td>192337.98</td>
+<td>85053.64</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1326</td>
+<td>Europe</td>
+<td>Ukraine</td>
+<td>Cereal</td>
+<td>Offline</td>
+<td>L</td>
+<td>4/14/2014</td>
+<td>559183347</td>
+<td>5/21/2014</td>
+<td>3633</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>747308.10</td>
+<td>425460.63</td>
+<td>321847.47</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1327</td>
+<td>Europe</td>
+<td>Armenia</td>
+<td>Meat</td>
+<td>Offline</td>
+<td>M</td>
+<td>11/9/2015</td>
+<td>781416594</td>
+<td>12/23/2015</td>
+<td>7390</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>3117767.10</td>
+<td>2695059.10</td>
+<td>422708.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1328</td>
+<td>Europe</td>
+<td>Denmark</td>
+<td>Clothes</td>
+<td>Offline</td>
+<td>H</td>
+<td>5/9/2012</td>
+<td>713357150</td>
+<td>6/3/2012</td>
+<td>7088</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>774576.64</td>
+<td>254033.92</td>
+<td>520542.72</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1329</td>
+<td>Europe</td>
+<td>Finland</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>L</td>
+<td>4/22/2014</td>
+<td>906794202</td>
+<td>5/11/2014</td>
+<td>9410</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>1028324.80</td>
+<td>337254.40</td>
+<td>691070.40</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="b7163336" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.tail(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1328</td>
+<td>Europe</td>
+<td>Denmark</td>
+<td>Clothes</td>
+<td>Offline</td>
+<td>H</td>
+<td>5/9/2012</td>
+<td>713357150</td>
+<td>6/3/2012</td>
+<td>7088</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>774576.64</td>
+<td>254033.92</td>
+<td>520542.72</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1329</td>
+<td>Europe</td>
+<td>Finland</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>L</td>
+<td>4/22/2014</td>
+<td>906794202</td>
+<td>5/11/2014</td>
+<td>9410</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>1028324.80</td>
+<td>337254.40</td>
+<td>691070.40</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="tamanho-do-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="tamanho-do-dataframe">2. Tamanho do dataframe</h2>
+<p>Podemos verificar utilizando o método <code>.shape</code>. Isso retorna uma tupla de dois números: (linhas, colunas).</p>
+<div id="3f2b0f1d" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>(1330, 14)</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Uma maneira mais organizada</strong></p>
+</blockquote>
+<div id="f47c30a2" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>linhas, colunas <span class="op">=</span> vendas_europa.shape</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Linhas: </span><span class="sc">{</span>linhas<span class="sc">}</span><span class="ss">, Colunas: </span><span class="sc">{</span>colunas<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linhas: 1330, Colunas: 14</code></pre>
+</div>
+</div>
+</section>
+<section id="tipo-de-dados-e-informações-gerais" class="level2">
+<h2 class="anchored" data-anchor-id="tipo-de-dados-e-informações-gerais">3. Tipo de dados e informações gerais</h2>
+<p>Com o método <code>.info()</code> podemos verificar o tipo de dado em cada coluna, o número total de linhas e colunas, o total de nulos e não-nulos no conjunto de dados, além do espaço ocupado em memória.</p>
+<div id="be3702bf" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 1330 entries, 0 to 1329
+Data columns (total 14 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Region          1330 non-null   object 
+ 1   Country         1330 non-null   object 
+ 2   Item Type       1330 non-null   object 
+ 3   Sales Channel   1330 non-null   object 
+ 4   Order Priority  1324 non-null   object 
+ 5   Order Date      1330 non-null   object 
+ 6   Order ID        1330 non-null   int64  
+ 7   Ship Date       1330 non-null   object 
+ 8   Units Sold      1330 non-null   int64  
+ 9   Unit Price      1330 non-null   float64
+ 10  Unit Cost       1330 non-null   float64
+ 11  Total Revenue   1330 non-null   float64
+ 12  Total Cost      1330 non-null   float64
+ 13  Total Profit    1330 non-null   float64
+dtypes: float64(5), int64(2), object(7)
+memory usage: 145.6+ KB</code></pre>
+</div>
+</div>
+<p>É possível ainda listar as colunas do <em>dataframe</em>.</p>
+<div id="9bd0a418" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>Index(['Region', 'Country', 'Item Type', 'Sales Channel', 'Order Priority',
+       'Order Date', 'Order ID', 'Ship Date', 'Units Sold', 'Unit Price',
+       'Unit Cost', 'Total Revenue', 'Total Cost', 'Total Profit'],
+      dtype='object')</code></pre>
+</div>
+</div>
+</section>
+<section id="dados-nulos" class="level2">
+<h2 class="anchored" data-anchor-id="dados-nulos">4. Dados nulos</h2>
+<p>A partir do método <code>.insna()</code> podemos verificar a presença de nulos, mostrar a contagem de nulos, bem como o percentual de nulos no conjunto de dados. Vejamos a seguir:</p>
+<blockquote class="blockquote">
+<p><strong>Total de nulos:</strong></p>
+</blockquote>
+<div id="d7ea2314" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.isna().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Region            0
+Country           0
+Item Type         0
+Sales Channel     0
+Order Priority    6
+Order Date        0
+Order ID          0
+Ship Date         0
+Units Sold        0
+Unit Price        0
+Unit Cost         0
+Total Revenue     0
+Total Cost        0
+Total Profit      0
+dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Percentual de nulos:</strong></p>
+</blockquote>
+<div id="aea964fc" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.isna().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(vendas_europa) <span class="op">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>Region            0.000000
+Country           0.000000
+Item Type         0.000000
+Sales Channel     0.000000
+Order Priority    0.451128
+Order Date        0.000000
+Order ID          0.000000
+Ship Date         0.000000
+Units Sold        0.000000
+Unit Price        0.000000
+Unit Cost         0.000000
+Total Revenue     0.000000
+Total Cost        0.000000
+Total Profit      0.000000
+dtype: float64</code></pre>
+</div>
+</div>
+<p>Note que temos <strong>0,45%</strong> de dados nulos na coluna <code>Order Priority</code>, correspondente a 6 valores.</p>
+</section>
+<section id="valores-disintos" class="level2">
+<h2 class="anchored" data-anchor-id="valores-disintos">5. Valores disintos</h2>
+<p>A partir do método <code>.unique()</code> podemos verificar os valores distintos em determinada coluna do conjunto de dados. Consideremos a coluna <code>Item Type</code>, podemos verificar os valores distintos dessa coluna por meio do seguinte código:</p>
+<div id="9a45f9f8" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>array(['Beverages', 'Clothes', 'Cereal', 'Office Supplies', 'Fruits',
+       'Vegetables', 'Meat', 'Snacks', 'Baby Food', 'Household',
+       'Cosmetics', 'Personal Care'], dtype=object)</code></pre>
+</div>
+</div>
+<p>Analogamente, podemos mostrar quantas categorias temos em <code>Item Type</code> utilizando o método <code>.nunique()</code>.</p>
+<div id="7047e607" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].nunique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>12</code></pre>
+</div>
+</div>
+</section>
+<section id="contagem-de-valores" class="level2">
+<h2 class="anchored" data-anchor-id="contagem-de-valores">6. Contagem de valores</h2>
+<p>A partir do método <code>.value_counts()</code> podemos realizar a contagem em determinada coluna do conjunto de dados. Consideremos a coluna <code>Item Type</code>, podemos verificar quais valores distintos temos por meio do seguinte código:</p>
+<div id="4d295aa8" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>Item Type
+Office Supplies    123
+Beverages          121
+Personal Care      115
+Vegetables         114
+Cosmetics          114
+Fruits             112
+Baby Food          112
+Meat               111
+Clothes            105
+Cereal             103
+Snacks             103
+Household           97
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<p>Se optarmos por incluir os <strong>dados nulos</strong>, podemos utilizar a opção <code>dropna=False</code>.</p>
+<div id="3d2d7eb9" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Order Priority'</span>].value_counts(dropna<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>Order Priority
+M      352
+L      334
+H      334
+C      304
+NaN      6
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<section id="dica" class="level3">
+<h3 class="anchored" data-anchor-id="dica">Dica</h3>
+<blockquote class="blockquote">
+<p>Podemos inclusive plotar essa contagem, mas isso veremos com mais calma adiante.</p>
+</blockquote>
+<div id="dd40b94c" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].value_counts().plot.barh(color<span class="op">=</span><span class="st">'k'</span>, figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metodos_basicos_pandas_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="duplicatas" class="level2">
+<h2 class="anchored" data-anchor-id="duplicatas">7. Duplicatas</h2>
+<p>Sabemos que a coluna <code>Sales Channel</code> vai ter várias duplicatas (pois só poucas opções de valores para o canal de vendas). Logo vamos listar quais são os valores que contém duplicatas.</p>
+<div id="6423bddd" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Sales Channel'</span>].drop_duplicates()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>0    Offline
+1     Online
+Name: Sales Channel, dtype: object</code></pre>
+</div>
+</div>
+<p>Alternativamente, podemos listar um <code>subset</code> e listar duplicatas em relação a ele:</p>
+<div id="3b9d6117" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>vendas_europa.drop_duplicates(subset<span class="op">=</span>[<span class="st">'Country'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Country</th>
+<th data-quarto-table-cell-role="th">Item Type</th>
+<th data-quarto-table-cell-role="th">Sales Channel</th>
+<th data-quarto-table-cell-role="th">Order Priority</th>
+<th data-quarto-table-cell-role="th">Order Date</th>
+<th data-quarto-table-cell-role="th">Order ID</th>
+<th data-quarto-table-cell-role="th">Ship Date</th>
+<th data-quarto-table-cell-role="th">Units Sold</th>
+<th data-quarto-table-cell-role="th">Unit Price</th>
+<th data-quarto-table-cell-role="th">Unit Cost</th>
+<th data-quarto-table-cell-role="th">Total Revenue</th>
+<th data-quarto-table-cell-role="th">Total Cost</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Europe</td>
+<td>Czech Republic</td>
+<td>Beverages</td>
+<td>Offline</td>
+<td>C</td>
+<td>9/12/2011</td>
+<td>478051030</td>
+<td>9/29/2011</td>
+<td>4778</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>226716.10</td>
+<td>151892.62</td>
+<td>74823.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Europe</td>
+<td>Bosnia and Herzegovina</td>
+<td>Clothes</td>
+<td>Online</td>
+<td>M</td>
+<td>10/14/2013</td>
+<td>919133651</td>
+<td>11/4/2013</td>
+<td>927</td>
+<td>109.28</td>
+<td>35.84</td>
+<td>101302.56</td>
+<td>33223.68</td>
+<td>68078.88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Europe</td>
+<td>Austria</td>
+<td>Cereal</td>
+<td>Offline</td>
+<td>C</td>
+<td>8/13/2014</td>
+<td>987410676</td>
+<td>9/6/2014</td>
+<td>5616</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>1155211.20</td>
+<td>657689.76</td>
+<td>497521.44</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Europe</td>
+<td>Bulgaria</td>
+<td>Office Supplies</td>
+<td>Online</td>
+<td>L</td>
+<td>10/31/2010</td>
+<td>672330081</td>
+<td>11/29/2010</td>
+<td>6266</td>
+<td>651.21</td>
+<td>524.96</td>
+<td>4080481.86</td>
+<td>3289399.36</td>
+<td>791082.50</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Europe</td>
+<td>Estonia</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>L</td>
+<td>9/28/2016</td>
+<td>579463422</td>
+<td>11/1/2016</td>
+<td>4958</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>46258.14</td>
+<td>34309.36</td>
+<td>11948.78</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Europe</td>
+<td>Montenegro</td>
+<td>Fruits</td>
+<td>Offline</td>
+<td>L</td>
+<td>5/29/2016</td>
+<td>313705861</td>
+<td>7/10/2016</td>
+<td>1390</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>12968.70</td>
+<td>9618.80</td>
+<td>3349.90</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Europe</td>
+<td>Luxembourg</td>
+<td>Vegetables</td>
+<td>Offline</td>
+<td>L</td>
+<td>2/13/2010</td>
+<td>744683635</td>
+<td>4/1/2010</td>
+<td>7291</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>1123251.46</td>
+<td>662970.63</td>
+<td>460280.83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Europe</td>
+<td>Switzerland</td>
+<td>Meat</td>
+<td>Online</td>
+<td>L</td>
+<td>3/21/2014</td>
+<td>169378983</td>
+<td>4/10/2014</td>
+<td>1860</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>784715.40</td>
+<td>678323.40</td>
+<td>106392.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>Europe</td>
+<td>Finland</td>
+<td>Beverages</td>
+<td>Online</td>
+<td>H</td>
+<td>3/16/2012</td>
+<td>566428315</td>
+<td>3/23/2012</td>
+<td>7581</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>359718.45</td>
+<td>240999.99</td>
+<td>118718.46</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10</td>
+<td>Europe</td>
+<td>Belgium</td>
+<td>Snacks</td>
+<td>Online</td>
+<td>M</td>
+<td>1/12/2015</td>
+<td>519380223</td>
+<td>1/17/2015</td>
+<td>5005</td>
+<td>152.58</td>
+<td>97.44</td>
+<td>763662.90</td>
+<td>487687.20</td>
+<td>275975.70</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11</td>
+<td>Europe</td>
+<td>San Marino</td>
+<td>Office Supplies</td>
+<td>Online</td>
+<td>H</td>
+<td>4/13/2014</td>
+<td>904589211</td>
+<td>5/4/2014</td>
+<td>6905</td>
+<td>651.21</td>
+<td>524.96</td>
+<td>4496605.05</td>
+<td>3624848.80</td>
+<td>871756.25</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>Europe</td>
+<td>Netherlands</td>
+<td>Meat</td>
+<td>Offline</td>
+<td>M</td>
+<td>3/8/2017</td>
+<td>747774398</td>
+<td>4/3/2017</td>
+<td>1916</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>808341.24</td>
+<td>698746.04</td>
+<td>109595.20</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>Europe</td>
+<td>Russia</td>
+<td>Household</td>
+<td>Online</td>
+<td>M</td>
+<td>7/10/2017</td>
+<td>194176757</td>
+<td>8/20/2017</td>
+<td>72</td>
+<td>668.27</td>
+<td>502.54</td>
+<td>48115.44</td>
+<td>36182.88</td>
+<td>11932.56</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>Europe</td>
+<td>Ukraine</td>
+<td>Cosmetics</td>
+<td>Online</td>
+<td>H</td>
+<td>1/22/2011</td>
+<td>773645913</td>
+<td>1/28/2011</td>
+<td>7873</td>
+<td>437.20</td>
+<td>263.33</td>
+<td>3442075.60</td>
+<td>2073197.09</td>
+<td>1368878.51</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">17</td>
+<td>Europe</td>
+<td>Latvia</td>
+<td>Meat</td>
+<td>Offline</td>
+<td>M</td>
+<td>12/15/2011</td>
+<td>847317397</td>
+<td>12/18/2011</td>
+<td>8902</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>3755664.78</td>
+<td>3246470.38</td>
+<td>509194.40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">18</td>
+<td>Europe</td>
+<td>Serbia</td>
+<td>Beverages</td>
+<td>Online</td>
+<td>L</td>
+<td>9/3/2012</td>
+<td>599624192</td>
+<td>9/21/2012</td>
+<td>978</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>46406.10</td>
+<td>31090.62</td>
+<td>15315.48</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19</td>
+<td>Europe</td>
+<td>Portugal</td>
+<td>Office Supplies</td>
+<td>Online</td>
+<td>M</td>
+<td>1/21/2014</td>
+<td>734318292</td>
+<td>3/4/2014</td>
+<td>9956</td>
+<td>651.21</td>
+<td>524.96</td>
+<td>6483446.76</td>
+<td>5226501.76</td>
+<td>1256945.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">20</td>
+<td>Europe</td>
+<td>Poland</td>
+<td>Household</td>
+<td>Offline</td>
+<td>L</td>
+<td>7/7/2017</td>
+<td>232196319</td>
+<td>8/4/2017</td>
+<td>905</td>
+<td>668.27</td>
+<td>502.54</td>
+<td>604784.35</td>
+<td>454798.70</td>
+<td>149985.65</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">21</td>
+<td>Europe</td>
+<td>Liechtenstein</td>
+<td>Cosmetics</td>
+<td>Online</td>
+<td>L</td>
+<td>7/15/2012</td>
+<td>229693067</td>
+<td>7/15/2012</td>
+<td>138</td>
+<td>437.20</td>
+<td>263.33</td>
+<td>60333.60</td>
+<td>36339.54</td>
+<td>23994.06</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">22</td>
+<td>Europe</td>
+<td>United Kingdom</td>
+<td>Beverages</td>
+<td>Online</td>
+<td>C</td>
+<td>4/8/2017</td>
+<td>121945512</td>
+<td>4/12/2017</td>
+<td>5242</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>248732.90</td>
+<td>166643.18</td>
+<td>82089.72</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">23</td>
+<td>Europe</td>
+<td>Slovenia</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>H</td>
+<td>10/22/2012</td>
+<td>169799983</td>
+<td>11/20/2012</td>
+<td>6443</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>60113.19</td>
+<td>44585.56</td>
+<td>15527.63</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">24</td>
+<td>Europe</td>
+<td>Malta</td>
+<td>Vegetables</td>
+<td>Online</td>
+<td>M</td>
+<td>3/11/2014</td>
+<td>894589078</td>
+<td>4/10/2014</td>
+<td>7643</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>1177480.58</td>
+<td>694977.99</td>
+<td>482502.59</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>Europe</td>
+<td>Cyprus</td>
+<td>Fruits</td>
+<td>Offline</td>
+<td>M</td>
+<td>7/12/2015</td>
+<td>600515115</td>
+<td>8/30/2015</td>
+<td>4622</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>43123.26</td>
+<td>31984.24</td>
+<td>11139.02</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">28</td>
+<td>Europe</td>
+<td>Monaco</td>
+<td>Personal Care</td>
+<td>Online</td>
+<td>L</td>
+<td>6/8/2014</td>
+<td>263098371</td>
+<td>7/4/2014</td>
+<td>5509</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>450250.57</td>
+<td>312195.03</td>
+<td>138055.54</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>Europe</td>
+<td>Norway</td>
+<td>Cereal</td>
+<td>Online</td>
+<td>M</td>
+<td>10/8/2014</td>
+<td>100640618</td>
+<td>10/18/2014</td>
+<td>650</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>133705.00</td>
+<td>76121.50</td>
+<td>57583.50</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33</td>
+<td>Europe</td>
+<td>Armenia</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>M</td>
+<td>3/23/2011</td>
+<td>120977771</td>
+<td>5/2/2011</td>
+<td>8866</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>82719.78</td>
+<td>61352.72</td>
+<td>21367.06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">35</td>
+<td>Europe</td>
+<td>Denmark</td>
+<td>Beverages</td>
+<td>Online</td>
+<td>H</td>
+<td>6/5/2016</td>
+<td>973268353</td>
+<td>6/26/2016</td>
+<td>589</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>27948.05</td>
+<td>18724.31</td>
+<td>9223.74</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">37</td>
+<td>Europe</td>
+<td>Kosovo</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>L</td>
+<td>5/2/2010</td>
+<td>291995418</td>
+<td>6/6/2010</td>
+<td>6788</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>63332.04</td>
+<td>46972.96</td>
+<td>16359.08</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">38</td>
+<td>Europe</td>
+<td>Hungary</td>
+<td>Baby Food</td>
+<td>Online</td>
+<td>M</td>
+<td>1/25/2011</td>
+<td>128686225</td>
+<td>3/13/2011</td>
+<td>9968</td>
+<td>255.28</td>
+<td>159.42</td>
+<td>2544631.04</td>
+<td>1589098.56</td>
+<td>955532.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">39</td>
+<td>Europe</td>
+<td>Lithuania</td>
+<td>Cosmetics</td>
+<td>Offline</td>
+<td>L</td>
+<td>1/6/2012</td>
+<td>420875346</td>
+<td>2/18/2012</td>
+<td>5223</td>
+<td>437.20</td>
+<td>263.33</td>
+<td>2283495.60</td>
+<td>1375372.59</td>
+<td>908123.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40</td>
+<td>Europe</td>
+<td>Albania</td>
+<td>Vegetables</td>
+<td>Online</td>
+<td>C</td>
+<td>10/5/2012</td>
+<td>476633536</td>
+<td>11/3/2012</td>
+<td>5310</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>818058.60</td>
+<td>482838.30</td>
+<td>335220.30</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">42</td>
+<td>Europe</td>
+<td>Moldova</td>
+<td>Personal Care</td>
+<td>Online</td>
+<td>M</td>
+<td>3/11/2013</td>
+<td>467045819</td>
+<td>4/12/2013</td>
+<td>8092</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>661359.16</td>
+<td>458573.64</td>
+<td>202785.52</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">51</td>
+<td>Europe</td>
+<td>France</td>
+<td>Meat</td>
+<td>Online</td>
+<td>L</td>
+<td>11/28/2015</td>
+<td>245440852</td>
+<td>12/17/2015</td>
+<td>257</td>
+<td>421.89</td>
+<td>364.69</td>
+<td>108425.73</td>
+<td>93725.33</td>
+<td>14700.40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">52</td>
+<td>Europe</td>
+<td>Spain</td>
+<td>Fruits</td>
+<td>Online</td>
+<td>H</td>
+<td>10/22/2011</td>
+<td>817006289</td>
+<td>11/14/2011</td>
+<td>9172</td>
+<td>9.33</td>
+<td>6.92</td>
+<td>85574.76</td>
+<td>63470.24</td>
+<td>22104.52</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">53</td>
+<td>Europe</td>
+<td>Sweden</td>
+<td>Vegetables</td>
+<td>Online</td>
+<td>H</td>
+<td>9/20/2010</td>
+<td>298228013</td>
+<td>10/25/2010</td>
+<td>1151</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>177323.06</td>
+<td>104660.43</td>
+<td>72662.63</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">59</td>
+<td>Europe</td>
+<td>Macedonia</td>
+<td>Cosmetics</td>
+<td>Online</td>
+<td>C</td>
+<td>12/26/2010</td>
+<td>350977408</td>
+<td>1/22/2011</td>
+<td>869</td>
+<td>437.20</td>
+<td>263.33</td>
+<td>379926.80</td>
+<td>228833.77</td>
+<td>151093.03</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">60</td>
+<td>Europe</td>
+<td>Greece</td>
+<td>Personal Care</td>
+<td>Offline</td>
+<td>NaN</td>
+<td>12/8/2011</td>
+<td>701298367</td>
+<td>1/6/2012</td>
+<td>8626</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>705002.98</td>
+<td>488835.42</td>
+<td>216167.56</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">61</td>
+<td>Europe</td>
+<td>Italy</td>
+<td>Personal Care</td>
+<td>Online</td>
+<td>C</td>
+<td>2/25/2011</td>
+<td>309342658</td>
+<td>3/28/2011</td>
+<td>222</td>
+<td>81.73</td>
+<td>56.67</td>
+<td>18144.06</td>
+<td>12580.74</td>
+<td>5563.32</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">66</td>
+<td>Europe</td>
+<td>Germany</td>
+<td>Baby Food</td>
+<td>Offline</td>
+<td>L</td>
+<td>1/6/2017</td>
+<td>361311852</td>
+<td>2/15/2017</td>
+<td>9061</td>
+<td>255.28</td>
+<td>159.42</td>
+<td>2313092.08</td>
+<td>1444504.62</td>
+<td>868587.46</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">78</td>
+<td>Europe</td>
+<td>Andorra</td>
+<td>Cereal</td>
+<td>Online</td>
+<td>H</td>
+<td>3/19/2010</td>
+<td>696197879</td>
+<td>3/26/2010</td>
+<td>9278</td>
+<td>205.70</td>
+<td>117.11</td>
+<td>1908484.60</td>
+<td>1086546.58</td>
+<td>821938.02</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">79</td>
+<td>Europe</td>
+<td>Iceland</td>
+<td>Cosmetics</td>
+<td>Online</td>
+<td>C</td>
+<td>4/5/2012</td>
+<td>907349526</td>
+<td>5/16/2012</td>
+<td>3743</td>
+<td>437.20</td>
+<td>263.33</td>
+<td>1636439.60</td>
+<td>985644.19</td>
+<td>650795.41</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">83</td>
+<td>Europe</td>
+<td>Croatia</td>
+<td>Beverages</td>
+<td>Offline</td>
+<td>L</td>
+<td>2/22/2013</td>
+<td>189924275</td>
+<td>3/21/2013</td>
+<td>1668</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>79146.60</td>
+<td>53025.72</td>
+<td>26120.88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">89</td>
+<td>Europe</td>
+<td>Slovakia</td>
+<td>Household</td>
+<td>Offline</td>
+<td>L</td>
+<td>2/20/2010</td>
+<td>585362994</td>
+<td>4/11/2010</td>
+<td>773</td>
+<td>668.27</td>
+<td>502.54</td>
+<td>516572.71</td>
+<td>388463.42</td>
+<td>128109.29</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>Europe</td>
+<td>Vatican City</td>
+<td>Beverages</td>
+<td>Online</td>
+<td>C</td>
+<td>12/27/2015</td>
+<td>370484149</td>
+<td>1/19/2016</td>
+<td>3348</td>
+<td>47.45</td>
+<td>31.79</td>
+<td>158862.60</td>
+<td>106432.92</td>
+<td>52429.68</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>Europe</td>
+<td>Belarus</td>
+<td>Vegetables</td>
+<td>Online</td>
+<td>L</td>
+<td>12/31/2012</td>
+<td>413078916</td>
+<td>1/11/2013</td>
+<td>8086</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>1245729.16</td>
+<td>735259.98</td>
+<td>510469.18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">102</td>
+<td>Europe</td>
+<td>Ireland</td>
+<td>Vegetables</td>
+<td>Offline</td>
+<td>C</td>
+<td>11/16/2010</td>
+<td>901670968</td>
+<td>12/11/2010</td>
+<td>3331</td>
+<td>154.06</td>
+<td>90.93</td>
+<td>513173.86</td>
+<td>302887.83</td>
+<td>210286.03</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">140</td>
+<td>Europe</td>
+<td>Romania</td>
+<td>Snacks</td>
+<td>Online</td>
+<td>H</td>
+<td>8/18/2014</td>
+<td>747327220</td>
+<td>9/15/2014</td>
+<td>9587</td>
+<td>152.58</td>
+<td>97.44</td>
+<td>1462784.46</td>
+<td>934157.28</td>
+<td>528627.18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">152</td>
+<td>Europe</td>
+<td>Georgia</td>
+<td>Baby Food</td>
+<td>Online</td>
+<td>L</td>
+<td>1/26/2014</td>
+<td>359197413</td>
+<td>3/8/2014</td>
+<td>3352</td>
+<td>255.28</td>
+<td>159.42</td>
+<td>855698.56</td>
+<td>534375.84</td>
+<td>321322.72</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Note que retornou apenas países que contém duplicatas.</p>
+</section>
+<section id="novas-colunas" class="level2">
+<h2 class="anchored" data-anchor-id="novas-colunas">8. Novas colunas</h2>
+<p>Podemos também criar novas colunas. Vamos supor que se deseja obter os valores de <code>Total Profit</code> em real brasileiro (BRL ou R$) ao invés de dólar (USD). Considerando 1 BRL = 4,96 USD (16/02/2024, 12h50). Tem-se:</p>
+<div id="18cd03cb" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformando Total Profit em inteiro:</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Total Profit'</span>] <span class="op">=</span> vendas_europa[<span class="st">'Total Profit'</span>].astype(<span class="st">'int'</span>) </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertendo USD para BRL:</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Total Profit (BRL)'</span>] <span class="op">=</span> vendas_europa[<span class="st">'Total Profit'</span>] <span class="op">*</span> <span class="fl">4.96</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizando o resultado:</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>vendas_europa[[<span class="st">'Total Profit (BRL)'</span>, <span class="st">'Total Profit'</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Total Profit (BRL)</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>371122.08</td>
+<td>74823</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>337666.88</td>
+<td>68078</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2467704.16</td>
+<td>497521</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3923766.72</td>
+<td>791082</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>59262.08</td>
+<td>11948</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Outro exemplo seria:</p>
+<div id="f67de643" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Marcando a versão:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Version'</span>] <span class="op">=</span> <span class="st">'001'</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resultado:</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>vendas_europa[[<span class="st">'Total Profit (BRL)'</span>, <span class="st">'Total Profit'</span>, <span class="st">'Version'</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Total Profit (BRL)</th>
+<th data-quarto-table-cell-role="th">Total Profit</th>
+<th data-quarto-table-cell-role="th">Version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>371122.08</td>
+<td>74823</td>
+<td>001</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>337666.88</td>
+<td>68078</td>
+<td>001</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2467704.16</td>
+<td>497521</td>
+<td>001</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3923766.72</td>
+<td>791082</td>
+<td>001</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>59262.08</td>
+<td>11948</td>
+<td>001</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb32" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Manipulação de Dados com Pandas"</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Vinícius Oviedo"</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="an">toc-expand:</span><span class="co"> 1</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">    highlight-style: monokai</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Métodos</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>Nesta aula, vamos trabalhar com um conjunto de dados sobre **vendas**. Veremos métodos para:</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Mostrar as *N* primeiras ou *N* últimas linhas </span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Verificar o tamanho do *dataframe*</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Verificar os tipos de dados (variáveis) e informaçoes gerais</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Inspecionar a presença de dados nulos/ausentes</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Investigar valores disintos</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>Realizar contagem de valores</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>Listar duplicatas</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a><span class="ss">8. </span>Criar novas colunas.</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>Entretanto, vamos carregar os dados a partir do bloco de código abaixo:</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>vendas_europa <span class="op">=</span> pd.read_csv(<span class="st">'dados/vendas/EuropeSalesRecords.csv'</span>)</span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>vendas_europa</span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>Dito isso, nada melhor que o velho "***hands-on***".</span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Primeiras/últimas *N* linhas</span></span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Dafault: N=5</span></span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a>vendas_europa.head()</span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a><span class="co"># É possível selecionar o numero de linhas a mostrar:</span></span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a>vendas_europa.head(<span class="dv">2</span>)</span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Últimas cinco linhas:**</span></span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a>vendas_europa.tail()</span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a>vendas_europa.tail(<span class="dv">2</span>)</span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Tamanho do dataframe</span></span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a>Podemos verificar utilizando o método <span class="in">`.shape`</span>. Isso retorna uma tupla de dois números: (linhas, colunas).</span>
+<span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a>vendas_europa.shape</span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Uma maneira mais organizada**</span></span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-86"><a href="#cb32-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-87"><a href="#cb32-87" aria-hidden="true" tabindex="-1"></a>linhas, colunas <span class="op">=</span> vendas_europa.shape</span>
+<span id="cb32-88"><a href="#cb32-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Linhas: </span><span class="sc">{</span>linhas<span class="sc">}</span><span class="ss">, Colunas: </span><span class="sc">{</span>colunas<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Tipo de dados e informações gerais</span></span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-93"><a href="#cb32-93" aria-hidden="true" tabindex="-1"></a>Com o método <span class="in">`.info()`</span> podemos verificar o tipo de dado em cada coluna, o número total de linhas e colunas, o total de nulos e não-nulos no conjunto de dados, além do espaço ocupado em memória.</span>
+<span id="cb32-94"><a href="#cb32-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-97"><a href="#cb32-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-98"><a href="#cb32-98" aria-hidden="true" tabindex="-1"></a>vendas_europa.info()</span>
+<span id="cb32-99"><a href="#cb32-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-100"><a href="#cb32-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-101"><a href="#cb32-101" aria-hidden="true" tabindex="-1"></a>É possível ainda listar as colunas do *dataframe*.</span>
+<span id="cb32-102"><a href="#cb32-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-105"><a href="#cb32-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-106"><a href="#cb32-106" aria-hidden="true" tabindex="-1"></a>vendas_europa.columns</span>
+<span id="cb32-107"><a href="#cb32-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-108"><a href="#cb32-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-109"><a href="#cb32-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Dados nulos</span></span>
+<span id="cb32-110"><a href="#cb32-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-111"><a href="#cb32-111" aria-hidden="true" tabindex="-1"></a>A partir do método <span class="in">`.insna()`</span> podemos verificar a presença de nulos, mostrar a contagem de nulos, bem como o percentual de nulos no conjunto de dados. Vejamos a seguir:</span>
+<span id="cb32-112"><a href="#cb32-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-113"><a href="#cb32-113" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Total de nulos:** </span></span>
+<span id="cb32-114"><a href="#cb32-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-117"><a href="#cb32-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-118"><a href="#cb32-118" aria-hidden="true" tabindex="-1"></a>vendas_europa.isna().<span class="bu">sum</span>()</span>
+<span id="cb32-119"><a href="#cb32-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span> </span>
+<span id="cb32-120"><a href="#cb32-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-121"><a href="#cb32-121" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Percentual de nulos:** </span></span>
+<span id="cb32-122"><a href="#cb32-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-125"><a href="#cb32-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-126"><a href="#cb32-126" aria-hidden="true" tabindex="-1"></a>vendas_europa.isna().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(vendas_europa) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb32-127"><a href="#cb32-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span> </span>
+<span id="cb32-128"><a href="#cb32-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-129"><a href="#cb32-129" aria-hidden="true" tabindex="-1"></a>Note que temos **0,45%** de dados nulos na coluna <span class="in">`Order Priority`</span>, correspondente a 6 valores.</span>
+<span id="cb32-130"><a href="#cb32-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-131"><a href="#cb32-131" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Valores disintos</span></span>
+<span id="cb32-132"><a href="#cb32-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-133"><a href="#cb32-133" aria-hidden="true" tabindex="-1"></a>A partir do método <span class="in">`.unique()`</span> podemos verificar os valores distintos em determinada coluna do conjunto de dados. Consideremos a coluna <span class="in">`Item Type`</span>, podemos verificar os valores distintos dessa coluna por meio do seguinte código:</span>
+<span id="cb32-134"><a href="#cb32-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-137"><a href="#cb32-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-138"><a href="#cb32-138" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].unique()</span>
+<span id="cb32-139"><a href="#cb32-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-140"><a href="#cb32-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-141"><a href="#cb32-141" aria-hidden="true" tabindex="-1"></a>Analogamente, podemos mostrar quantas categorias temos em <span class="in">`Item Type`</span> utilizando o método <span class="in">`.nunique()`</span>.</span>
+<span id="cb32-142"><a href="#cb32-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-145"><a href="#cb32-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-146"><a href="#cb32-146" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].nunique()</span>
+<span id="cb32-147"><a href="#cb32-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-148"><a href="#cb32-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-149"><a href="#cb32-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Contagem de valores</span></span>
+<span id="cb32-150"><a href="#cb32-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-151"><a href="#cb32-151" aria-hidden="true" tabindex="-1"></a>A partir do método <span class="in">`.value_counts()`</span> podemos realizar a contagem em determinada coluna do conjunto de dados. Consideremos a coluna <span class="in">`Item Type`</span>, podemos verificar quais valores distintos temos por meio do seguinte código:</span>
+<span id="cb32-152"><a href="#cb32-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-155"><a href="#cb32-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-156"><a href="#cb32-156" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].value_counts()</span>
+<span id="cb32-157"><a href="#cb32-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-158"><a href="#cb32-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-159"><a href="#cb32-159" aria-hidden="true" tabindex="-1"></a>Se optarmos por incluir os **dados nulos**, podemos utilizar a opção <span class="in">`dropna=False`</span>.</span>
+<span id="cb32-160"><a href="#cb32-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-163"><a href="#cb32-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-164"><a href="#cb32-164" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Order Priority'</span>].value_counts(dropna<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb32-165"><a href="#cb32-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-166"><a href="#cb32-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-167"><a href="#cb32-167" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dica</span></span>
+<span id="cb32-168"><a href="#cb32-168" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Podemos inclusive plotar essa contagem, mas isso veremos com mais calma adiante.</span></span>
+<span id="cb32-169"><a href="#cb32-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-172"><a href="#cb32-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-173"><a href="#cb32-173" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Item Type'</span>].value_counts().plot.barh(color<span class="op">=</span><span class="st">'k'</span>, figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb32-174"><a href="#cb32-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-175"><a href="#cb32-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-176"><a href="#cb32-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. Duplicatas</span></span>
+<span id="cb32-177"><a href="#cb32-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-178"><a href="#cb32-178" aria-hidden="true" tabindex="-1"></a>Sabemos que a coluna <span class="in">`Sales Channel`</span> vai ter várias duplicatas (pois só poucas opções de valores para o canal de vendas). Logo vamos listar quais são os valores que contém duplicatas.</span>
+<span id="cb32-179"><a href="#cb32-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-182"><a href="#cb32-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-183"><a href="#cb32-183" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Sales Channel'</span>].drop_duplicates()</span>
+<span id="cb32-184"><a href="#cb32-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-185"><a href="#cb32-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-186"><a href="#cb32-186" aria-hidden="true" tabindex="-1"></a>Alternativamente, podemos listar um <span class="in">`subset`</span> e listar duplicatas em relação a ele:</span>
+<span id="cb32-187"><a href="#cb32-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-190"><a href="#cb32-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-191"><a href="#cb32-191" aria-hidden="true" tabindex="-1"></a>vendas_europa.drop_duplicates(subset<span class="op">=</span>[<span class="st">'Country'</span>])</span>
+<span id="cb32-192"><a href="#cb32-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-193"><a href="#cb32-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-194"><a href="#cb32-194" aria-hidden="true" tabindex="-1"></a>Note que retornou apenas países que contém duplicatas.</span>
+<span id="cb32-195"><a href="#cb32-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-196"><a href="#cb32-196" aria-hidden="true" tabindex="-1"></a><span class="fu">## 8. Novas colunas</span></span>
+<span id="cb32-197"><a href="#cb32-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-198"><a href="#cb32-198" aria-hidden="true" tabindex="-1"></a>Podemos também criar novas colunas. Vamos supor que se deseja obter os valores de <span class="in">`Total Profit`</span> em real brasileiro (BRL ou R\$) ao invés de dólar (USD). Considerando 1 BRL = 4,96 USD (16/02/2024, 12h50). Tem-se:</span>
+<span id="cb32-199"><a href="#cb32-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-202"><a href="#cb32-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-203"><a href="#cb32-203" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformando Total Profit em inteiro:</span></span>
+<span id="cb32-204"><a href="#cb32-204" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Total Profit'</span>] <span class="op">=</span> vendas_europa[<span class="st">'Total Profit'</span>].astype(<span class="st">'int'</span>) </span>
+<span id="cb32-205"><a href="#cb32-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-206"><a href="#cb32-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertendo USD para BRL:</span></span>
+<span id="cb32-207"><a href="#cb32-207" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Total Profit (BRL)'</span>] <span class="op">=</span> vendas_europa[<span class="st">'Total Profit'</span>] <span class="op">*</span> <span class="fl">4.96</span></span>
+<span id="cb32-208"><a href="#cb32-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-209"><a href="#cb32-209" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizando o resultado:</span></span>
+<span id="cb32-210"><a href="#cb32-210" aria-hidden="true" tabindex="-1"></a>vendas_europa[[<span class="st">'Total Profit (BRL)'</span>, <span class="st">'Total Profit'</span>]].head()</span>
+<span id="cb32-211"><a href="#cb32-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-212"><a href="#cb32-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-213"><a href="#cb32-213" aria-hidden="true" tabindex="-1"></a>Outro exemplo seria:</span>
+<span id="cb32-214"><a href="#cb32-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-217"><a href="#cb32-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-218"><a href="#cb32-218" aria-hidden="true" tabindex="-1"></a><span class="co"># Marcando a versão:</span></span>
+<span id="cb32-219"><a href="#cb32-219" aria-hidden="true" tabindex="-1"></a>vendas_europa[<span class="st">'Version'</span>] <span class="op">=</span> <span class="st">'001'</span></span>
+<span id="cb32-220"><a href="#cb32-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-221"><a href="#cb32-221" aria-hidden="true" tabindex="-1"></a><span class="co"># Resultado:</span></span>
+<span id="cb32-222"><a href="#cb32-222" aria-hidden="true" tabindex="-1"></a>vendas_europa[[<span class="st">'Total Profit (BRL)'</span>, <span class="st">'Total Profit'</span>, <span class="st">'Version'</span>]].head()</span>
+<span id="cb32-223"><a href="#cb32-223" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

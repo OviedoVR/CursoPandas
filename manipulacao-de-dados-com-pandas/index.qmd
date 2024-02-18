@@ -1,0 +1,28 @@
+---
+title: "Manipulacao de Dados com Pandas"
+author: "Vinícius Oviedo"
+---
+
+# Sobre o material
+
+Esse é um material de apoio para o curso "**Manipulacao de Dados com Pandas**" disponível na [Udemy](https://udemy.com.br).
+
+O curso sobre 10 módulos:
+
+1. Leitura de arquivos
+2. Métodos básicos do Pandas
+3. *Slicing* e filtros
+4. Métodos estatísticos
+5. Agregações
+6. Junções
+7. Limpeza de dados
+8. Visualização de dados
+9. **Projeto prático: limpeza de dados**
+10. **Projeto prático: respondendo perguntas de negócio**
+
+# Sobre o autor
+
+**Analista de Dados** & **Editor LaTeX**, auta como profissional autônomo, tendo prestado serviços a nivel nacional e internacional a clientes de mais de 30 países. Conta com mais de 200 projetos conclusos. 
+
+> GitHub: [OviedoVR](https://github.com/OviedoVR) | 
+  Linkedin: [Perfil](https://www.linkedin.com/in/vinicius-oviedo)

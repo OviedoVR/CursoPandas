@@ -1,0 +1,99 @@
+---
+title: "Manipulação de Dados com Pandas"
+author: "Vinícius Oviedo"
+toc: true
+toc-expand: 1
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3
+---
+
+# Leitura de arquivos
+
+Primeiramente, é importante entendermos as duas estrturuas que o `Pandas` trabalha: **séries** e **dataframes**. Ambas estruturas estão ilustradas na Figura a seguir. Ao longo das aulas, iremos trabalhar majoriatiaramente com *dataframes*.
+
+![Series vs Dataframes](assets/series-vs-df.png)
+
+O Pandas permite ler diversos formatos de dados, desde planilhas em Excel (`.xlsx`), arquivos separados por vírgula (`.csv`), tabelas em páginas `html`, arquivos de texto (`.txt`), arquivos `.json`, entre outras possibilidades. Abaixo temos algumas delas:
+
+```python
+# arquivo de MS Excel:
+dados = pd.read_xlsx('ARQUIVO.xlsx', sheet_name='planilha')
+
+# arquivo csv (separado por vírgulas):
+dados = pd.read_csv('ARQUIVO.csv', delimiter=';')
+
+# arquivo de texto:
+dados = pd.read_txt('ARQUIVO.txt')
+
+# outros formatos (asc, txt, dat): 
+dados = pd.read_fwf('ARQUIVO.asc')
+
+# tabela de página web (html):
+dados = pd.read_html('URL')[indice_tabela]
+
+# arquivo json:
+dados = pd.read_json('ARQUIVO.json')
+```
+
+Prévio a coleta de dados, é sempre fundamental importar a biblioteca. Isso é realizado com o comando abaixo:
+
+```{python}
+import pandas as pd
+```
+
+Feito isso, vejamos alguns exemplos a seguir.
+
+## 1. Planilha de Excel
+
+```{python}
+preco_streamings = pd.read_excel('dados/preco_servicos_streaming/Streaming_prices.xlsx')
+preco_streamings
+```
+
+## 2. Arquivo csv
+
+```{python}
+vendas_europa = pd.read_csv('dados/vendas/EuropeSalesRecords.csv')
+vendas_europa
+```
+
+## 3. Arquivo txt
+```{python}
+enderecos_IP = pd.read_fwf('dados/enderecos_ip/ip_addresses.txt', delimiter='; ')
+enderecos_IP
+```
+
+## 4. Tabela html
+
+```{python}
+# OBS --- é preciso ter tabelas HTML para ler
+
+URL = 'https://pt.wikipedia.org/wiki/Demografia_do_Brasil'
+
+crescimento_populacional = pd.read_html(URL)[3]
+crescimento_populacional
+```
+
+### Dica:
+> verificar quantas tabelas tem a página:
+
+```{python}
+crescimento_populacional = pd.read_html(URL)
+len(crescimento_populacional)
+```
+
+## 5. Arquivo json
+
+```{python}
+corridas_app = pd.read_json('dados/corridas/corridas.json')
+corridas_app
+```
+
+#### Dica:
+> Mais informações e opções podem ser encontradas na [documentação oficial do Pandas](https://pandas.pydata.org/pandas-docs/stable/reference/io.html#) (veja esse exemplo para o método [pd.read_csv](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv))

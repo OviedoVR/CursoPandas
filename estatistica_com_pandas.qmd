@@ -1,0 +1,230 @@
+---
+title: "Métodos estatísticos"
+author: "Vinícius Oviedo"
+toc: true
+toc-expand: 1
+format:
+  html:
+    theme: minty
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3
+---
+
+# Métodos estatísticos
+
+Nesta aula, vamos trabalhar com medidas de estatística descritiva em `Pandas`. Aqui, vamos utilizar um conjunto de dados disponível na biblioteca `seaborn`, uma biblioteca de visualização de dados. O conjunto de dados trata de contas e gorgetas em um restaurante fictício. O conteúdo a ser discutido é:
+
+1. Método `describe()`
+2. Obtenção de valores máximo e mínimo, além da amplitdue dos dados
+3. Medidas de tendência central: média, mediana e moda
+4. Medidas de dispersão: desvio padrão, variância, coeficiente de variação
+5. Medidas de posição: quartis, percentis, mediana
+6. Outliers via método IQR
+7. Correlação entre variáveis.
+
+Primeiramente, vamos carregar o conjunto de dados `tips`, além das bibliotecas necessárias:
+
+```{python}
+import pandas as pd
+import seaborn as sns
+
+tips = sns.load_dataset('tips')
+tips.head()
+```
+
+## 1. Estatísticas descritivas
+
+As estatísticas descritivas podem ser obtidas pelo método `.describe()`
+
+```{python}
+# Vamos mostrar a tabela transposta (T) fins de visualização (linhas viram colunas):
+tips.describe().T
+```
+
+Nesse *dataframe* de saída temos:
+
+| Coluna | Descrição |
+| ------ | --------- |
+| **COUNT** | Contagem |
+| **MEAN** | Média |
+| **STD** | Desvio padrão |
+| **MIN** | Valor mínimo |
+| **25%** | Primeiro quartil (`Q1`, 25% dos dados) |
+| **50%** | Segundo quartil ou **mediana** (`Q2`, 50% dos dados) |
+| **75%** | Terceiro quartil (`Q3`, 75% dos dados) |
+| **MAX** | Valor máximo |
+
+### Dica:
+> Caso queiramos menter dados categóricos também, podemos incluir a opção `include='all'`.
+
+
+## 2. Mínimo, máximo e amplitude
+
+Com essas medidas, podemos responder algumas perguntas.
+
+> **Qual foi a gorjeta mínima?**
+
+```{python}
+tips['tip'].min()
+```
+
+> **Qual foi a maior conta (máximo `total_bill`)?**
+
+```{python}
+tips['total_bill'].max()
+```
+
+Logo a amplitude dos dados (para a coluna `tip`) pode ser obtida por:
+
+$$
+A = Max - Min
+$$
+
+```{python}
+amplitude_gorjetas = tips['tip'].max() - tips['tip'].min()
+amplitude_gorjetas
+```
+
+## 3. Medidas de tendência central
+
+> **Média**
+
+```{python}
+tips['tip'].mean()
+```
+
+> **Mediana**
+
+```{python}
+tips['total_bill'].mode()
+```
+
+> **Moda**
+
+```{python}
+tips['day'].mode()
+```
+
+Conferindo:
+
+```{python}
+tips['day'].value_counts()
+```
+
+
+## 4. Medidas de dispersão:
+
+> **Desvio Padrão**
+
+```{python}
+# Amostra (padrão, ddof=1):
+print(tips['tip'].std())
+
+# População:
+print(tips['tip'].std(ddof=0))
+```
+
+> **Variância**
+
+```{python}
+# Amostra (padrão, ddof=1):
+print(tips['tip'].var())
+
+# População:
+print(tips['tip'].var(ddof=0))
+```
+
+> **Coeficiente de variação (CV)**
+
+```{python}
+# Amostra:
+cv_gorjeta = tips['tip'].std(ddof=1) / tips['tip'].mean() *100
+cv_gorjeta = round(cv_gorjeta, 2)
+print(f' CV para tip: {cv_gorjeta}')
+``` 
+
+
+## 5. Medidas de posição:
+
+> **Quartis**
+
+```{python}
+Q1 = tips['tip'].quantile(0.25)
+Q2 = tips['tip'].quantile(0.5)
+Q3 = tips['tip'].quantile(0.75)
+
+print(f'Q1 (25%): {Q1}')
+print(f'Q2 (50%): {Q2}')
+print(f'Q3 (75%): {Q3}')
+```
+
+Isso diz muito sobre a distribuição dos dados e pode ser visualizado por um boxplot:
+
+```{python}
+sns.boxplot(data=tips, x='tip', width=0.2, palette='viridis_r')
+```
+
+> **Percentis**
+
+```{python}
+# Percentil 90°:
+tips['tip'].quantile(0.9)
+```
+
+## 6. Outliers via método IQR
+
+A partir do conhecimento dos quartis e da distância inter-quartil (IQR), dada pela diferença Q3-Q1, podemos encontrar outliers (valores discrepantes):
+
+$$
+Outliers \ Inferiores = Q_1 - 1.5 IQR
+$$
+
+$$
+Outliers \ Superiores = Q_3 + 1.5 IQR
+$$
+
+Assim, vamos encontrar outliers para a coluna `total_bill`.
+
+```{python}
+IQR = tips['total_bill'].quantile(0.75) - tips['total_bill'].quantile(0.25)
+outliers_inf = tips['total_bill'].quantile(0.25) - 1.5*IQR
+outliers_sup = tips['total_bill'].quantile(0.75) + 1.5*IQR
+
+print(f'Outliers inferiores: {outliers_inf}')
+print(f'Outliers superiores: {outliers_sup}')
+```
+
+Do ponto de vista prático, gorjeta negativa não faz nenhum sentido. Logo, podemos concluir que só temos outliers superiores. Podemos visualizar esses outliers por meio de um boxplot:
+
+```{python}
+sns.boxplot(data=tips, x='total_bill', width=0.2, palette='viridis_r')
+```
+
+
+## 7. Correlação entre variáveis
+
+> **Paramétrica**
+
+```{python}
+# Default: Pearson
+correlacoes = tips[['tip', 'total_bill']].corr(method='pearson')
+correlacoes
+```
+
+É possível visualizar essas correlção via `heatmap`:
+
+```{python}
+sns.heatmap(correlacoes, annot=True, cmap='YlGnBu')
+```
+
+> **Não-paramétrica**
+
+```{python}
+# Default: Pearson
+correlacoes_spearman = tips[['tip', 'total_bill']].corr(method='spearman')
+sns.heatmap(correlacoes_spearman, annot=True, cmap='YlGnBu')
+```

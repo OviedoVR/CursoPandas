@@ -1,0 +1,183 @@
+---
+title: "Manipulação de Dados com Pandas"
+author: "Vinícius Oviedo"
+toc: true
+toc-expand: 1
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3
+---
+
+# Métodos
+
+Nesta aula, vamos trabalhar com um conjunto de dados sobre **vendas**. Veremos métodos para:
+
+1. Mostrar as *N* primeiras ou *N* últimas linhas 
+2. Verificar o tamanho do *dataframe*
+3. Verificar os tipos de dados (variáveis) e informaçoes gerais
+4. Inspecionar a presença de dados nulos/ausentes
+5. Investigar valores disintos
+6. Realizar contagem de valores
+7. Listar duplicatas
+8. Criar novas colunas.
+
+Entretanto, vamos carregar os dados a partir do bloco de código abaixo:
+
+```{python}
+import pandas as pd
+
+vendas_europa = pd.read_csv('dados/vendas/EuropeSalesRecords.csv')
+vendas_europa
+```
+
+Dito isso, nada melhor que o velho "***hands-on***".
+
+## 1. Primeiras/últimas *N* linhas
+
+```{python}
+# Dafault: N=5
+vendas_europa.head()
+```
+
+```{python}
+# É possível selecionar o numero de linhas a mostrar:
+vendas_europa.head(2)
+```
+
+> **Últimas cinco linhas:**
+
+```{python}
+vendas_europa.tail()
+```
+
+```{python}
+vendas_europa.tail(2)
+```
+
+## 2. Tamanho do dataframe
+
+Podemos verificar utilizando o método `.shape`. Isso retorna uma tupla de dois números: (linhas, colunas).
+
+```{python}
+vendas_europa.shape
+```
+
+> **Uma maneira mais organizada**
+
+```{python}
+linhas, colunas = vendas_europa.shape
+print(f'Linhas: {linhas}, Colunas: {colunas}')
+```
+
+## 3. Tipo de dados e informações gerais
+
+Com o método `.info()` podemos verificar o tipo de dado em cada coluna, o número total de linhas e colunas, o total de nulos e não-nulos no conjunto de dados, além do espaço ocupado em memória.
+
+```{python}
+vendas_europa.info()
+```
+
+É possível ainda listar as colunas do *dataframe*.
+
+```{python}
+vendas_europa.columns
+```
+
+## 4. Dados nulos
+
+A partir do método `.insna()` podemos verificar a presença de nulos, mostrar a contagem de nulos, bem como o percentual de nulos no conjunto de dados. Vejamos a seguir:
+
+> **Total de nulos:** 
+
+```{python}
+vendas_europa.isna().sum()
+``` 
+
+> **Percentual de nulos:** 
+
+```{python}
+vendas_europa.isna().sum() / len(vendas_europa) * 100
+``` 
+
+Note que temos **0,45%** de dados nulos na coluna `Order Priority`, correspondente a 6 valores.
+
+## 5. Valores disintos
+
+A partir do método `.unique()` podemos verificar os valores distintos em determinada coluna do conjunto de dados. Consideremos a coluna `Item Type`, podemos verificar os valores distintos dessa coluna por meio do seguinte código:
+
+```{python}
+vendas_europa['Item Type'].unique()
+```
+
+Analogamente, podemos mostrar quantas categorias temos em `Item Type` utilizando o método `.nunique()`.
+
+```{python}
+vendas_europa['Item Type'].nunique()
+```
+
+## 6. Contagem de valores
+
+A partir do método `.value_counts()` podemos realizar a contagem em determinada coluna do conjunto de dados. Consideremos a coluna `Item Type`, podemos verificar quais valores distintos temos por meio do seguinte código:
+
+```{python}
+vendas_europa['Item Type'].value_counts()
+```
+
+Se optarmos por incluir os **dados nulos**, podemos utilizar a opção `dropna=False`.
+
+```{python}
+vendas_europa['Order Priority'].value_counts(dropna=False)
+```
+
+### Dica
+> Podemos inclusive plotar essa contagem, mas isso veremos com mais calma adiante.
+
+```{python}
+vendas_europa['Item Type'].value_counts().plot.barh(color='k', figsize=(6,4))
+```
+
+## 7. Duplicatas
+
+Sabemos que a coluna `Sales Channel` vai ter várias duplicatas (pois só poucas opções de valores para o canal de vendas). Logo vamos listar quais são os valores que contém duplicatas.
+
+```{python}
+vendas_europa['Sales Channel'].drop_duplicates()
+```
+
+Alternativamente, podemos listar um `subset` e listar duplicatas em relação a ele:
+
+```{python}
+vendas_europa.drop_duplicates(subset=['Country'])
+```
+
+Note que retornou apenas países que contém duplicatas.
+
+## 8. Novas colunas
+
+Podemos também criar novas colunas. Vamos supor que se deseja obter os valores de `Total Profit` em real brasileiro (BRL ou R\$) ao invés de dólar (USD). Considerando 1 BRL = 4,96 USD (16/02/2024, 12h50). Tem-se:
+
+```{python}
+# Transformando Total Profit em inteiro:
+vendas_europa['Total Profit'] = vendas_europa['Total Profit'].astype('int') 
+
+# Convertendo USD para BRL:
+vendas_europa['Total Profit (BRL)'] = vendas_europa['Total Profit'] * 4.96
+
+# Visualizando o resultado:
+vendas_europa[['Total Profit (BRL)', 'Total Profit']].head()
+```
+
+Outro exemplo seria:
+
+```{python}
+# Marcando a versão:
+vendas_europa['Version'] = '001'
+
+# Resultado:
+vendas_europa[['Total Profit (BRL)', 'Total Profit', 'Version']].head()
+```

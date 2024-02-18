@@ -1,0 +1,72 @@
+---
+title: "Agregações"
+author: "Vinícius Oviedo"
+toc: true
+toc-expand: 1
+format:
+  html:
+    theme: minty
+    code-tools: true
+    code-overflow: wrap
+    highlight-style: monokai
+execute:
+  warning: false
+jupyter: python3
+---
+
+# Agregações
+
+Nesta aula, vamos trabalhar com agregação de dados com `Pandas`. É uma aula mais curta, comparada às anteriores, porém permite um leque de possibilidades. Veremos:
+
+1. Método `groupby`
+2. Método `agg`
+
+Para isso, utilizaremos o conjunto de dados sobre **vendas**.
+
+```{python}
+import pandas as pd
+
+vendas_europa = pd.read_csv('dados/vendas/EuropeSalesRecords.csv')
+vendas_europa.head()
+```
+
+## 1. Método `groupby()`
+
+Nesse método, podemos agrupar dados com base em categorias e precisamos obrigatoriamente informar uma medida de agregação (e.g, soma, média, mediana, desvio padrão, etc.). Começemos com uma pergunta de negócio.
+
+> **Qual foi o faturamento total por país? (usemos 1 casas decimal)**
+
+```{python}
+vendas_europa.groupby('Country')['Total Revenue'].sum().round(1)
+```
+
+Note que country veio como inídice, mas podemos deixar as categorias como linhas convencionais (usando `as_index=False`) e adicionar mais de uma categoria. Para isso, vamos responder a outra pergunta.
+
+> **Qual foi o lucro médio em cada país por canal de venda? listemos o top 5**
+
+```{python}
+# Agregação:
+lucro_medio_pais_e_canal = vendas_europa.groupby('Country', as_index=False)['Total Profit'].sum().round(1)
+
+# Ordenação dos daodos:
+lucro_medio_pais_e_canal = lucro_medio_pais_e_canal.sort_values(by='Total Profit', ascending=False)
+
+# Visualização dos resultados:
+lucro_medio_pais_e_canal.head()
+```
+
+## 2. Método `agg`
+
+Esse metodo serve para utilizarmos mais de uma medida de agregação. No caso da pergunta anterior, só a média não nos diz muita coisa. Em outras palavras, é uma boa prática mostrar o desvio padrão junto à média. Assim, temos uma noção da variabilidade dos dados e se a média de fato representa bem nosso conjunto de dados. Vamos utilizar a mesma lógica da pergunta anterior, mas mostrando os 5 piores em termos de lucro.
+
+```{python}
+# Agregação:
+vendas_europa.groupby(['Country', 'Sales Channel'])['Total Profit'].agg(['mean', 'std', 'median']).tail()
+```
+
+Outra opção é:
+
+```{python}
+# Agregação:
+vendas_europa.groupby(['Country', 'Sales Channel'])['Total Profit'].describe()
+```
